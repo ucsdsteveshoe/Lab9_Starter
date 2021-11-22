@@ -87,7 +87,26 @@
     </section>
   </main>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
   <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "811d1fa8afc74a39ace0bf5848d5ff1a"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+  <script>
+
+    window.onerror = e => {
+      console.log('Error found ;), name: ' + e);
+      TrackJS.track(e);
+    };
+
+    class StevenError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "Steven error";
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +114,108 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      // Step 3: Trying Try/catch
+      try {
+        if(firstNum > 0) {
+          throw new StevenError("I demand that the first input be negative because I'm bad at math");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (err) {
+        if (err instanceof SyntaxError) {
+          alert('Issue with input parameter. Try again with both numbers!');
+        } else {
+          throw err;
+        }
+      } finally {
+        console.log('Form eventlistener complete');
+      }
     });
 
+    // Step 2: Console testing
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', e => {
+      console.log('Console Log Demo');
+    });
+
+    errorBtns[1].addEventListener('click', e => {
+      console.error('Console Error Demo');
+    });
+
+    errorBtns[2].addEventListener('click', e => {
+      console.count('Count Button: ');
+    });
+
+    errorBtns[3].addEventListener('click', e => {
+      console.warn('Console Warn Demo');
+    });
+
+    const a = 1;
+    const b = 10;
+    const reason = '10 is an order of magnitude bigger than 1';
+    errorBtns[4].addEventListener('click', e => {
+      console.assert(a == b, {a, b, reason});
+    });
+
+    errorBtns[5].addEventListener('click', e => {
+      console.clear();
+    });
+
+    errorBtns[6].addEventListener('click', e => {
+      console.dir(errorBtns[6]);
+    });
+
+    errorBtns[7].addEventListener('click', e => {
+      console.dirxml(errorBtns[7]);
+    });
+
+    const label = 'groupup';
+
+    errorBtns[8].addEventListener('click', e => {
+      console.group(label);
+    });
+
+    errorBtns[9].addEventListener('click', e => {
+      console.groupEnd(label);
+    });
+
+    const exampleVideoArray = [
+      {
+        name: 'Software Engineering',
+        num: 110
+      },
+      {
+        name: 'Programming Languages',
+        num: 130
+      },
+      {
+        name: 'Advanced Software Engineering mabye I didnt want to look it up',
+        num: 112
+      }
+    ];
+
+    errorBtns[10].addEventListener('click', e => {
+      console.table(exampleVideoArray);
+    });
+
+    const time_label = 'Timer Button';
+
+    errorBtns[11].addEventListener('click', e => {
+      console.time(time_label);
+    });
+
+    errorBtns[12].addEventListener('click', e => {
+      console.timeEnd(time_label);
+    });
+
+    errorBtns[13].addEventListener('click', e => {
+      console.trace();
+    });
+
+    errorBtns[14].addEventListener('click', e => {
+      console.log(boom);
+    });
+
   </script>
 </body>
 
